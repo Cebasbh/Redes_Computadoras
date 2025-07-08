@@ -1,4 +1,3 @@
-import tkinter as tk
 from operaciones import *
 from Bloques import *
 import datetime
