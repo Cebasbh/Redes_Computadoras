@@ -1,5 +1,8 @@
+import tkinter as tk
 from operaciones import *
 from Bloques import *
+import datetime
+
 def main():
     code = input("Ingrese su texto a hashear: ")
     hash(code)
@@ -8,7 +11,7 @@ class Log(ctk.CTk):
         super().__init__()
         self.title("Generador MD5")
         self.resizable(0, 0)
-        self.geometry("420x190")
+        self.geometry("460x280")
         self.grid_columnconfigure((0), weight=3)
         self.grid_columnconfigure((1), weight=3)
         self.grid_columnconfigure((2), weight=3)
@@ -21,12 +24,28 @@ class Log(ctk.CTk):
         hashed = Entry(master = self, width = 280)
         hashed.grid(row=3, column=0, padx=(20,20), pady=(0,10), sticky="ew", columnspan=5)
         hashed.configure(state="disabled")
+
+        timestamp = Entry(master = self, width=280)
+        timestamp.grid(row=5, column=0, padx=(20, 20), pady=(0,10), sticky="ew", columnspan=5)
+        timestamp.configure(state="disabled")
         #
         def hashear():
             hashed.configure(state="normal")
+            timestamp.configure(state="normal")
+
             hashed.delete(0, "end")
-            hashed.insert(0, hash(entry.get()))  
+            timestamp.delete(0, "end")
+
+            # Insertar hash
+            hashed.insert(0, hash(entry.get()))
+
+            # Insertar timestamp
+            now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            timestamp.insert(0, now)
+
             hashed.configure(state="disabled")
+            timestamp.configure(state="disabled")
+
         def copiar():
             if hashed.get() == "":
                 inform.configure(text = "No hay nada :(", text_color = "red")
@@ -40,10 +59,10 @@ class Log(ctk.CTk):
             self.after(2000, lambda: inform.configure(text=""))
 
         hashbutton = Button(master = self, text="Hash!", command = hashear, width = 130)
-        hashbutton.grid(row=4, column=4, padx=(0,20), pady=(2,0), sticky="e")
+        hashbutton.grid(row=6, column=4, padx=(0,20), pady=(13,0), sticky="e")
 
         copybutton = Button(master = self, text="Copy!", command = copiar, width = 130)
-        copybutton.grid(row=4, column=3, padx=(0,5), pady=(2,0), sticky="e")
+        copybutton.grid(row=6, column=3, padx=(0,5), pady=(13,0), sticky="e")
 
         text = Label(master = self, text="Texto a hashear: ")
         text.grid(row=0, column=0, padx=(20,0), pady=(10,0), sticky="w", columnspan=4)
@@ -51,8 +70,11 @@ class Log(ctk.CTk):
         text1 = Label(master = self, text="Texto a hasheado: ")
         text1.grid(row=2, column=0, padx=(20,0), pady=0, sticky="w", columnspan=4)
 
+        label_timestamp = Label(master=self, text="Fecha y hora de generación:")
+        label_timestamp.grid(row=4, column=0, padx=(20, 0), pady=0, sticky="w", columnspan=4)
+
         inform = Label(master = self, text="")
-        inform.grid(row=4, column=0, padx=(25,0), pady=(1,0), columnspan=5, sticky="w" )
+        inform.grid(row=6, column=0, padx=(45,0), pady=(12,0))
 
 def hash(code:str):
     A = 1732584193
